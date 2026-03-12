@@ -1,0 +1,17 @@
+{
+  "name": "marketplace-skills",
+  "description": "Claude Code 스킬 마켓플레이스 - Figma 디자인 변환 및 관련 스킬 제공",
+  "owner": {
+    "name": "marketplace_skills"
+  },
+  "plugins": [
+    {
+      "name": "figma-to-code",
+      "source": "./",
+      "description": "Figma 디자인을 프로덕션 코드로 변환하는 스킬. React, Vue, Next.js, Svelte, Angular, HTML을 지원하며 Tailwind, Bootstrap, styled-components, CSS Modules, 순수 CSS 등 다양한 CSS 방식으로 구현. 픽셀 퍼펙트 코드 생성.",
+      "category": "design",
+      "tags": ["figma", "design-to-code", "react", "vue", "nextjs", "svelte", "angular", "responsive", "pixel-perfect"],
+      "version": "1.0.0"
+    }
+  ]
+}
