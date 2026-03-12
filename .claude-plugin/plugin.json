@@ -1,0 +1,9 @@
+{
+  "name": "figma-to-code",
+  "version": "1.0.0",
+  "description": "Figma 디자인을 프로덕션 코드로 변환하는 스킬. React, Vue, Next.js, Svelte, Angular, HTML을 지원하며 Tailwind, Bootstrap, styled-components, CSS Modules, 순수 CSS 등 다양한 CSS 방식으로 구현. 피그마와 100% 일치하는 픽셀 퍼펙트 코드 생성.",
+  "author": {
+    "name": "marketplace_skills"
+  },
+  "keywords": ["figma", "design-to-code", "react", "vue", "nextjs", "svelte", "angular", "responsive", "pixel-perfect"]
+}
