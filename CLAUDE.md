@@ -22,7 +22,8 @@ marketplace_skills/
         └── references/
             ├── layout-patterns.md         # 레이아웃 단계 참조
             ├── style-patterns.md          # 스타일 단계 참조
-            ├── comparison-guide.md        # Playwright 비주얼 비교 가이드
+            ├── comparison-guide.md         # Playwright 비주얼 비교 가이드
+            ├── design-token-resolution.md  # 디자인 토큰 해석 가이드
             ├── frameworks/
             │   ├── react.md               # React 변환 규칙
             │   ├── vue.md                 # Vue 변환 규칙
