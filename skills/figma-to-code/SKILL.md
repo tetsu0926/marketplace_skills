@@ -177,6 +177,21 @@ MCP 출력에서 무시할 것:
 4. 과도한 div 중첩 — 시맨틱하게 정리한다
 5. 인라인 SVG data URI — CSS gradient로 변환한다
 
+**수치 추출 체크리스트 (반드시 기록할 것):**
+
+MCP 코드의 className에서 다음 값들을 정확히 추출하여 기록한다:
+```
+[섹션 수치 요약]
+- 컨테이너 padding: pt/pb/px 각각 (예: pt-200px pb-40px px-320px)
+- 자식 간 gap: (예: gap-80px, gap-32px, gap-64px)
+- 고정 크기 요소: (예: w-320px, h-64px, w-248px, w-153px)
+- border-radius: (예: rounded-48px, rounded-4px, rounded-full)
+- 최소 크기: (예: min-w-496px, min-w-231px)
+- 그라디언트 색상 스톱: (SVG stop-color + offset 추출)
+```
+
+**특히 padding의 top/bottom이 비대칭인 경우가 매우 흔하다.** `py-120px`로 단순화하지 말고 `pt-200px pb-40px`처럼 개별 값을 정확히 추출한다.
+
 **Step C: 레이아웃 구현**
 
 스크린샷을 보면서 해당 섹션의 HTML 구조를 작성한다:
@@ -222,6 +237,30 @@ MCP 출력에서 무시할 것:
 }
 .card-grid > * {
   flex: 1 1 calc(50% - 16px);
+  min-width: 496px;  /* MCP 데이터의 min-w 값 그대로 */
+}
+
+/* 숫자 통계 행 (divider 포함) */
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-card { width: 320px; text-align: center; }  /* 고정 폭 */
+.stat-divider { width: 1px; height: 80px; background: #e5e7eb; }
+
+/* 지그재그 프로세스 (위-바-아래) */
+.process-top { display: flex; justify-content: space-between; }
+.process-bar { height: 12px; border-radius: 9999px; /* gradient */ }
+.process-bottom { display: flex; justify-content: space-between; padding: 0 231px; }
+
+/* 교차 높이 타임라인 (각 인스턴스별 height 개별 적용) */
+.timeline { display: flex; align-items: flex-start; justify-content: space-between; }
+.timeline-item { width: 153px; /* height는 각 아이템마다 다름 */ }
+
+/* 섹션 배경 그라디언트 (투명 → 색상) */
+.section-gradient-bg {
+  background: linear-gradient(to bottom, rgba(249,250,251,0), #f9fafb);
 }
 ```
 
@@ -262,7 +301,29 @@ MCP 출력에서 무시할 것:
 - MCP 데이터에서 정확한 크기(width, height), padding, border-radius 추출
 - 배경색, 텍스트 색상, font-size, font-weight 정확히 적용
 - hover/active 상태도 구현
-- 예: `height: 64px; padding: 12px 24px; border-radius: 4px; background: #0f4c5c; color: white; font-size: 22px; font-weight: 500;`
+- **같은 버튼 컴포넌트라도 인스턴스별로 스타일이 다를 수 있다** — 각각 확인한다
+
+버튼 변형 예시:
+```css
+/* CTA 메인 버튼 */
+.btn-main { width: 248px; height: 64px; padding: 12px 24px; border-radius: 4px; background: #0f4c5c; color: white; font-size: 22px; font-weight: 500; }
+/* 서브 버튼 - filled */
+.btn-sub-filled { padding: 16px; border-radius: 9999px; background: #0f4c5c; color: white; font-size: 18px; font-weight: 500; }
+/* 서브 버튼 - outlined (보라색) */
+.btn-sub-outlined { padding: 16px; border-radius: 9999px; background: #f9fafb; border: 1px solid #a258a2; color: #111827; font-size: 18px; font-weight: 500; }
+/* 서브 버튼 - outlined (회색) + 아이콘 */
+.btn-sub-icon { padding: 12px 16px 12px 24px; border-radius: 9999px; background: #f9fafb; border: 1px solid #e5e7eb; font-size: 16px; }
+```
+
+**탭/네비게이션 활성 상태 (자주 누락됨):**
+```css
+/* 탭 활성 - 상단 border (GNB) */
+.tab-active-top { border-top: 4px solid #0f4c5c; font-weight: 700; color: #0f4c5c; }
+/* 탭 활성 - 하단 border (서브 탭) */
+.tab-active-bottom { border-bottom: 4px solid #a258a2; font-weight: 700; color: #0f4c5c; }
+/* 탭 비활성 */
+.tab-inactive { border: none; font-weight: 500; color: #111827; }
+```
 
 **Step E: 에셋 적용**
 
@@ -390,6 +451,26 @@ background: radial-gradient(ellipse at 20% 0%, #0f4c5c 50%, #1a6977 62.5%, #2686
 ```
 
 **변환 규칙:** SVG `<stop>` 요소에서 `stop-color`와 `offset`을 추출하여 CSS gradient 스톱으로 변환한다.
+
+**자주 사용되는 그라디언트 패턴:**
+```css
+/* 숫자/제목 텍스트 그라디언트 (teal 계열) */
+.gradient-text-teal {
+  background: radial-gradient(ellipse at 20% 0%, #0f4c5c 50%, #1a6977 62.5%, #268691 75%, #3cc0c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* 프로그레스 바 그라디언트 (보라→파랑→청록) */
+.gradient-bar {
+  background: linear-gradient(90deg, #a258a2 0%, #6059a7 26%, #2860a3 53%, #009ede 79%, #46bc96 100%);
+  height: 12px;
+  border-radius: 9999px;
+}
+/* 섹션 배경 그라디언트 (투명 → 색상) */
+.section-fade-bg {
+  background: linear-gradient(to bottom, rgba(249,250,251,0), #f9fafb);
+}
+```
 
 ---
 
